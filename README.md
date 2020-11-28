@@ -1,3 +1,12 @@
+### This mir package ###
+This is a fork of https://github.com/dfki-ric/mir_robot.  
+
+This repository adds code to interface with a web-based control system for manufacturing.
+
+### Usage ###
+Launch file:
+- roslaunch mir_agm mir_agm.launch
+
 mir_driver
 ==========
 
