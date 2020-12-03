@@ -58,7 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  NextGoal.srv
+  WebComm.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -154,8 +154,8 @@ include_directories(
 add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
 target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
 
-add_executable(agm_goal_server_node src/agm_goal_server_node.cpp)
-target_link_libraries(agm_goal_server_node ${catkin_LIBRARIES} curl)
+add_executable(web_comm_server_node src/web_comm_server_node.cpp)
+target_link_libraries(web_comm_server_node ${catkin_LIBRARIES} curl)
 
 #############
 ## Install ##
