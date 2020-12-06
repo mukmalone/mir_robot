@@ -1,0 +1,104 @@
+# API End Points #
+
+### API Server URL ###
+http://192.168.2.238:3001/
+
+### Response object ###
+All endpoints return the same JSON object.  Depending on the request, some fields may just be their default value.
+
+`{
+    status: '0', name: '', sourceName: '', sourceX: '', sourceY: '', sourceW: '',
+    destinationName: '', destinationX: '', destinationY: '', destinationW: ''
+}
+`
+
+The ROS service which implements the endpoints in ROS has the following server definition:
+- name: WebComm.srv
+- contents:
+> - string function //name of function you want to call(defined below)
+> - string name //name of the robot making the request
+> - string location //used when moving to source or destination locations
+---
+> - uint32 status //status of the request.  PASS=1 Error Code is != 1
+> - string name  //returns the name of the robot, if there is an error this will be the error description
+> - string sourceName //Source Workstation name
+> - uint32 sourceX //Source workstation parking X location
+> - uint32 sourceY //Source workstation parking Y location
+> - uint32 sourceW //Source workstation parking angle
+> - string destinationName //Destination workstation name
+> - uint32 destinationX //Destination workstation parking X location
+> - uint32 destinationY //Destination workstation parking Y location
+> - uint32 destinationW //Destination workstation parking angle
+
+### Requesting next job to do ###
+curl: http://192.168.2.238:3001/workerGetNextJob?name=your-robot-name-goes-here
+- Function: NEXTJOB
+- Description: This curl will check if there is an available job for the robot corresponding to the robot name.  If there is it will return the source and destination name and coordinates
+
+### Activating job in worker ###
+curl:  http://192.168.2.238:3001/workerActivateJob?name=your-robot-name-goes-here
+- Function: ACTIVATEJOB
+- Description: This curl will acknowledge the job is received and that the robot has started the job
+
+### /workerLocation ###
+curl:  http://192.168.2.238:3001/workerLocation?name=your-robot-name-goes-here&location=source-or-desination-goes-here
+- Function: MOVEWORKER
+- Description: This curl will update the location of the worker to be either at the source or destination workstation
+- Implementation: in the `location` field `source` is used to acknowledge worker is at the source workstation, `destination` is used to acknowlegde the worker is at the destination station
+
+### /workerTakePart ###
+curl:  http://192.168.2.238:3001/workerTakePart?name=your-robot-name-goes-here
+- Function: TAKEPART
+- Description: This curl will acknowledge the worker has retrieved the part from the `source` workstation
+
+### /workerLoadWorkstation ###
+curl:  http://192.168.2.238:3001/workerLoadWorkstation?name=your-robot-name-goes-here
+- Function: LOADPART
+- Description: This curl will acknowledge the worker has loaded the part into the `destination` workstation
+
+### /workerArchiveJob ###
+curl:  http://192.168.2.238:3001/workerLoadWorkstation?name=your-robot-name-goes-here
+- Function: ARCHIVEJOB
+- Description: This curl will clear the worker job and signal it is ready for the next job (call NEXTJOB)
+
+
+# API Error Codes #
+
+## Worker Route API: workerRoute.js ##
+
+### /workerGetNextJob ###
+- 10001: General Error
+- 10002: There are no active routings
+- 10003: There are no tasks to do
+- 10004: Worker already has a job in progress
+- 10005: Worker does not exist
+
+### /workerActivateJob ###
+- 11001: General Error activating worker job
+- 11002: Worker is not ACTIVE
+- 11003: Problem activating job in worker
+- 11004: General error activating job
+- 11005: No job to activate
+
+### /workerLocation ###
+- 12001: General Error updating location
+- 12002: Error in move logic
+- 12003: General error updating location
+
+### /workerTakePart ###
+- 13001: Error acknowledging taking part
+- 13002: Problem updating worker in database
+- 13003: Distance was not 0 or station was already empty
+- 13004: Error with logic updating worker
+- 13005: Error updating when taking part
+
+### /workerLoadWorkstation ###
+- 14001: Error loading workstation
+- 14002: Error loading buffer station
+- 14003: Error updating the workstation in the database
+- 14004: There is already something in the workstation
+- 14005: Error with logic of loading workstation
+
+### /workerArchiveJob ###
+- 15001: Error archiving job
+- 15002: Error with logic of archiving job
