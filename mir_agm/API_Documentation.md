@@ -15,11 +15,12 @@ All endpoints return the same JSON object.  Depending on the request, some field
 
 The ROS service which implements the endpoints in ROS has the following server definition:
 - name: WebComm.srv
-- contents:
+- Request:
 > - string function //name of function you want to call(defined below)
 > - string name //name of the robot making the request
 > - string location //used when moving to source or destination locations
 ---
+- Response:
 > - uint32 status //status of the request.  PASS=1 Error Code is != 1
 > - string name  //returns the name of the robot, if there is an error this will be the error description
 > - string sourceName //Source Workstation name
