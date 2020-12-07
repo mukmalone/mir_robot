@@ -2,6 +2,7 @@
 
 ### API Server URL ###
 http://192.168.2.238:3001/
+- API is under development and deployed locally.  It will be available for free use to open source developers in the upcoming future.
 
 ### Response object ###
 All endpoints return the same JSON object.  Depending on the request, some fields may just be their default value.
@@ -30,12 +31,12 @@ The ROS service which implements the endpoints in ROS has the following server d
 > - uint32 destinationY //Destination workstation parking Y location
 > - uint32 destinationW //Destination workstation parking angle
 
-### Requesting next job to do ###
+### /workerGetNextJob ###
 curl: http://192.168.2.238:3001/workerGetNextJob?name=your-robot-name-goes-here
 - Function: NEXTJOB
 - Description: This curl will check if there is an available job for the robot corresponding to the robot name.  If there is it will return the source and destination name and coordinates
 
-### Activating job in worker ###
+### /workerActivateJob ###
 curl:  http://192.168.2.238:3001/workerActivateJob?name=your-robot-name-goes-here
 - Function: ACTIVATEJOB
 - Description: This curl will acknowledge the job is received and that the robot has started the job
