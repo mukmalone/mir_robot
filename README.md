@@ -3,6 +3,9 @@ This is a fork of https://github.com/dfki-ric/mir_robot.
 
 This repository adds code to interface with a web-based control system for manufacturing.
 
+### Documentation ###
+Here is the [API Documentation](https://github.com/mukmalone/mir_robot/blob/main/mir_agm/API_Documentation.md) and error codes.  Currently the app is local to my computer and has not yet been deployed into the web. 
+
 ### Usage ###
 Launch file:
 - roslaunch mir_agm mir_agm.launch
