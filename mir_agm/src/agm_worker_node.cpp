@@ -15,7 +15,7 @@ class Robot_Class {
     mir_agm::WebComm job;			
 
 		void agm_comm();
-    void move();
+    void move(int x, int y, int w);
 };
 
 void Robot_Class::agm_comm()
@@ -25,7 +25,7 @@ void Robot_Class::agm_comm()
     agmClient.call(job);
 }
 
-void Robot_Class::move()
+void Robot_Class::move(int x, int y, int w)
 {
   //tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
@@ -38,10 +38,11 @@ void Robot_Class::move()
   move_base_msgs::MoveBaseGoal goal;
 
   //we'll send a goal to the robot to move 1 meter forward
-  goal.target_pose.header.frame_id = "base_link";
+  goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-  goal.target_pose.pose.position.x = 1.0;
+  goal.target_pose.pose.position.x = x;
+  goal.target_pose.pose.position.y = y;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Sending goal");
@@ -51,11 +52,11 @@ void Robot_Class::move()
 
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
   {
-    ROS_INFO("Hooray, the base moved 1 meter forward");    
+    ROS_INFO("Hooray, the base moved to goal");    
   }
   else
   {
-    ROS_INFO("The base failed to move forward 1 meter for some reason");
+    ROS_INFO("The base failed to move to goal for some reason");
   }
 
 };
@@ -68,11 +69,12 @@ int main(int argc, char** argv){
 
   //find next job
   robot.job.request.function = "START";
-
+  int sX, sY, sW, dX, dY, dW;
   while (ros::ok()) { 
 
     string job = robot.job.request.function;
     int status = robot.job.response.status;
+    
 
     if (job=="START") {
       //ready for a new job
@@ -81,6 +83,12 @@ int main(int argc, char** argv){
       robot.agm_comm();
     } else if (job=="NEXTJOB" && status == 1) {
       //we have a new job to be activated
+      sX=robot.job.response.sourceX;
+      sY=robot.job.response.sourceY;
+      sW=robot.job.response.sourceW;
+      dX=robot.job.response.destinationX;
+      dY=robot.job.response.destinationY;
+      dW=robot.job.response.destinationW;
       robot.job.request.function = "ACTIVATEJOB";
       robot.job.request.location = "";
       robot.agm_comm();
@@ -88,7 +96,8 @@ int main(int argc, char** argv){
       //move to source 
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "source";
-      robot.move();
+      cout<<sX<<","<<sY<<","<<sW<<endl;
+      robot.move(sX, sY, sW);
       robot.agm_comm();
     } else if (job=="MOVEWORKER" && status == 1){
       //either TAKEPART or LOADPART depending on location
@@ -103,7 +112,8 @@ int main(int argc, char** argv){
       //move to destination station
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "destination";
-      robot.move();
+      cout<<sX<<","<<sY<<","<<sW<<endl;
+      robot.move(dX,dY, dW);
       robot.agm_comm();
     } else if (job=="LOADPART" && status == 1) {
       //archive job
