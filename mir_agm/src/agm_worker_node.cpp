@@ -57,6 +57,7 @@ void Robot_Class::move(int x, int y, int w)
   else
   {
     ROS_INFO("The base failed to move to goal for some reason");
+    job.request.function = "ERROR";
   }
 
 };
@@ -83,6 +84,7 @@ int main(int argc, char** argv){
       robot.agm_comm();
     } else if (job=="NEXTJOB" && status == 1) {
       //we have a new job to be activated
+      cout<<"Found next job and activating"<<endl;
       sX=robot.job.response.sourceX;
       sY=robot.job.response.sourceY;
       sW=robot.job.response.sourceW;
@@ -94,6 +96,7 @@ int main(int argc, char** argv){
       robot.agm_comm();
     } else if (job=="ACTIVATEJOB" && status == 1){
       //move to source 
+      cout<<"Moving to source"<<endl;
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "source";
       cout<<sX<<","<<sY<<","<<sW<<endl;
@@ -102,21 +105,25 @@ int main(int argc, char** argv){
     } else if (job=="MOVEWORKER" && status == 1){
       //either TAKEPART or LOADPART depending on location
       if (robot.job.request.location=="source"){
+        cout<<"Taking part"<<endl;
         robot.job.request.function = "TAKEPART";      
       } else {
+        cout<<"Loading workstation"<<endl;
         robot.job.request.function = "LOADPART";
       }
       robot.job.request.location = "";
       robot.agm_comm();
     } else if (job=="TAKEPART" && status == 1){
       //move to destination station
+      cout<<"Moving to destination"<<endl;
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "destination";
-      cout<<sX<<","<<sY<<","<<sW<<endl;
+      cout<<dX<<","<<dY<<","<<dW<<endl;
       robot.move(dX,dY, dW);
       robot.agm_comm();
     } else if (job=="LOADPART" && status == 1) {
       //archive job
+      cout<<"Archiving job"<<endl;
       robot.job.request.function = "ARCHIVEJOB";
       robot.job.request.location = "";
       robot.agm_comm();
@@ -124,11 +131,15 @@ int main(int argc, char** argv){
       //start over
       robot.job.request.function = "START";
       robot.job.request.location = "";
-      cout<<"Starting again"<<endl;
+      cout<<"Start again"<<endl;
     } else {
       //error
-      cout<<job<<endl;
-      cout<<status<<endl;
+      if (robot.job.request.function!="ERROR"){
+        cout<<job<<endl;
+        cout<<status<<endl;
+        cout<<robot.job.response.name<<endl;
+      }
+      
       if(status==10003){
         //there wasn't a job to do, reset and ask again
         robot.job.request.function = "START";

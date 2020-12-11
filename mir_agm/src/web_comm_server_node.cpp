@@ -72,7 +72,8 @@ bool get_next_order(mir_agm::WebComm::Request &req,
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '{'), readBuffer.end());
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '}'), readBuffer.end());
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '"'), readBuffer.end());        
-        
+        cout<<readBuffer<<endl;
+
         //break string into a vector
         vector<string> out;
         decomposeRes(readBuffer, delimiter, out);
