@@ -41,8 +41,9 @@ bool get_next_order(mir_agm::WebComm::Request &req,
         
     curl = curl_easy_init();
     
-    if(curl) {
-        string url = "http://192.168.2.238:3001";
+    if(curl) {            
+        string url = "http://192.168.2.238:3001"; //home
+        //string url = "http://10.100.3.167:3001"; //office
         string f = req.function;
         if(f=="NEXTJOB"){
             url += "/workerGetNextJob";
