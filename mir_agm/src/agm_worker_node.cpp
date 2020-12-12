@@ -140,7 +140,7 @@ int main(int argc, char** argv){
         cout<<robot.job.response.name<<endl;
       }
       
-      if(status==10003 || status==10002){
+      if(status==10003 || status==10002 || (status==0 && job=="NEXTJOB")){
         //there wasn't a job to do, reset and ask again
         robot.job.request.function = "START";
       }
