@@ -66,7 +66,15 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "agm_worker_node");
 
   Robot_Class robot;
-  robot.name = "Tesla";  
+  if(argc > 1){
+    robot.name = argv[1];  
+  } else {
+    robot.name = "Tesla";  
+  }
+  
+  cout<<argc<<endl;
+  cout<<argv<<endl;
+  cout<<robot.name<<endl;
 
   //find next job
   robot.job.request.function = "START";
