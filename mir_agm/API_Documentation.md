@@ -104,3 +104,4 @@ curl:  http://192.168.2.238:3001/workerLoadWorkstation?name=your-robot-name-goes
 ### /workerArchiveJob ###
 - 15001: Error archiving job
 - 15002: Error with logic of archiving job
+- 15003: The worker still has a job and needs to complete before archiving
