@@ -23,14 +23,24 @@ The ROS service which implements the endpoints in ROS has the following server d
 - Response:
 > - uint32 status //status of the request.  PASS=1 Error Code is != 1
 > - string name  //returns the name of the robot, if there is an error this will be the error description
+> - string array tools // returns the list of tools associated with the destination station
+> - string array propgram // returns the list of programs associated with the destination station
 > - string sourceName //Source Workstation name
-> - uint32 sourceX //Source workstation parking X location
-> - uint32 sourceY //Source workstation parking Y location
-> - uint32 sourceW //Source workstation parking angle
+> - uint32 sourcePosX //Source workstation parking X location
+> - uint32 sourcePosY //Source workstation parking Y location
+> - uint32 sourcePosZ //Source workstation parking Z location
+> - uint32 sourceOrientX //Source workstation parking X angle
+> - uint32 sourceOrientY //Source workstation parking Y angle
+> - uint32 sourceOrientZ //Source workstation parking Z angle
+> - uint32 sourceOrientW //Source workstation parking angle
 > - string destinationName //Destination workstation name
-> - uint32 destinationX //Destination workstation parking X location
-> - uint32 destinationY //Destination workstation parking Y location
-> - uint32 destinationW //Destination workstation parking angle
+> - uint32 destPosX //Destination workstation parking X location
+> - uint32 destPosY //Destination workstation parking Y location
+> - uint32 destPosZ //Destination workstation parking Z location
+> - uint32 destOrientX //Destination workstation parking X angle
+> - uint32 destOrientY //Destination workstation parking Y angle
+> - uint32 destOrientZ //Destination workstation parking Z angle
+> - uint32 destOrientW //Destination workstation parking angle
 
 ### /workerGetNextJob ###
 curl: http://192.168.2.238:3001/workerGetNextJob?name=your-robot-name-goes-here
