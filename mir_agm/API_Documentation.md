@@ -23,8 +23,11 @@ The ROS service which implements the endpoints in ROS has the following server d
 - Response:
 > - uint32 status //status of the request.  PASS=1 Error Code is != 1
 > - string name  //returns the name of the robot, if there is an error this will be the error description
-> - string array tools // returns the list of tools associated with the destination station
-> - string array propgram // returns the list of programs associated with the destination station
+> - string tools // returns the list of tools associated with the destination station
+> - string program // returns the list of programs associated with the destination station
+> - string poNum // returns the PO number of the part being run
+> - string partNumber // returns the part number of the part being run
+> - string partSerialNumber: // returns the serial number of the part being run
 > - string sourceName //Source Workstation name
 > - uint32 sourcePosX //Source workstation parking X location
 > - uint32 sourcePosY //Source workstation parking Y location
