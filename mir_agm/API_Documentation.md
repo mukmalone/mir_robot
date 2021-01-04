@@ -82,39 +82,39 @@ curl:  http://192.168.2.238:3001/workerLoadWorkstation?name=your-robot-name-goes
 ## Worker Route API: workerRoute.js ##
 
 ### /workerGetNextJob ###
-- 10001: General Error
+- 10001: There is a problem with communication check message formatting, normally a worker id problem
 - 10002: There are no active routings
 - 10003: There are no tasks to do
 - 10004: Worker already has a job in progress
 - 10005: Worker does not exist
 
 ### /workerActivateJob ###
-- 11001: General Error activating worker job
+- 11001: There is a problem with communication check message formatting, normally a worker id problem
 - 11002: Worker is not ACTIVE
 - 11003: Problem activating job in worker
 - 11004: General error activating job
 - 11005: No job to activate
 
 ### /workerLocation ###
-- 12001: General Error updating location
+- 12001: There is a problem with communication check message formatting, normally a worker id problem
 - 12002: Error in move logic
 - 12003: General error updating location
 
 ### /workerTakePart ###
-- 13001: Error acknowledging taking part
+- 13001: There is a problem with communication check message formatting, normally a worker id problem
 - 13002: Problem updating worker in database
 - 13003: Distance was not 0 or station was already empty
 - 13004: Error with logic updating worker
 - 13005: Error updating when taking part
 
 ### /workerLoadWorkstation ###
-- 14001: Error loading workstation
+- 14001: There is a problem with communication check message formatting, normally a worker id problem
 - 14002: Error loading buffer station
 - 14003: Error updating the workstation in the database
 - 14004: There is already something in the workstation
 - 14005: Error with logic of loading workstation
 
 ### /workerArchiveJob ###
-- 15001: Error archiving job
+- 15001: There is a problem with communication check message formatting, normally a worker id problem
 - 15002: Error with logic of archiving job
 - 15003: The worker still has a job and needs to complete before archiving
