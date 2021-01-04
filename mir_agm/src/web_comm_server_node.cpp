@@ -61,14 +61,13 @@ bool get_next_order(mir_agm::WebComm::Request &req,
             //do nothing
         }            
 
-        url += "?name="+req.name+"&location="+req.location;
+        url += "?key="+req.key+"&location="+req.location;
         
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         res_curl = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
-
         //remove { } from incoming message
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '{'), readBuffer.end());
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '}'), readBuffer.end());
@@ -83,37 +82,100 @@ bool get_next_order(mir_agm::WebComm::Request &req,
         int cnt=0;
         for(auto &s: out){
             string temp = s.substr(s.find(':')+1, s.length());
+            cout<<cnt<<":"<<temp<<endl;
             switch(cnt) {
                 case 0:
+                    //status
                     res.status=stoi(temp);                    
                     break;
                 case 1:
+                    //name
                     res.name=temp;
                     break; 
-                case 2:
-                    res.sourceName=temp;
+                case 2:   
+                    //tools             
+                    res.tools=temp;
                     break; 
                 case 3:
-                    res.sourceX=stoi(temp);
+                    //program
+                    res.program=temp;
                     break;
                 case 4:
-                    res.sourceY=stoi(temp);
+                    //poNum
+                    res.poNum=temp;
                     break;
                 case 5:
-                    res.sourceW=stoi(temp);
+                    //partNumber
+                    res.partNumber=temp;
                     break;
                 case 6:
-                    res.destinationName=temp;
+                    //partSerialNumber
+                    res.partSerialNumber=temp;
                     break;
                 case 7:
-                    res.destinationX=stoi(temp);
+                    //sourceName
+                    res.sourceName=temp;
                     break;
                 case 8:
-                    res.destinationY=stoi(temp);
+                    //sourcePosX
+                    res.sourcePosX=stoi(temp);
                     break;
-                case 9:   
-                    res.destinationW=stoi(temp);        
-                    break;               
+                case 9:
+                    //sourcePosY
+                    res.sourcePosY=stoi(temp);
+                    break;
+                case 10:
+                    //sourcePosZ
+                    res.sourcePosZ=stoi(temp);
+                    break;
+                case 11:
+                    //sourceOrientX
+                    res.sourceOrientX=stoi(temp);
+                    break;
+                case 12:   
+                    //sourceOrientY
+                    res.sourceOrientY=stoi(temp);        
+                    break;
+                case 13:   
+                    //sourceOrientZ
+                    res.sourceOrientZ=stoi(temp);        
+                    break;    
+                case 14:   
+                    //sourceOrientW
+                    res.sourceOrientW=stoi(temp);        
+                    break;
+                case 15:
+                    //destName
+                    res.destName=temp;
+                    break;
+                case 16:
+                    //destPosX
+                    res.destPosX=stoi(temp);
+                    break;
+                case 17:
+                    //destPosY
+                    res.destPosY=stoi(temp);
+                    break;
+                case 18:
+                    //destPosZ
+                    res.destPosZ=stoi(temp);
+                    break;
+                case 19:
+                    //destOrientX
+                    res.destOrientX=stoi(temp);
+                    break;
+                case 20:   
+                    //destOrientY
+                    res.destOrientY=stoi(temp);        
+                    break;
+                case 21:   
+                    //destOrientZ
+                    res.destOrientZ=stoi(temp);        
+                    break;    
+                case 22:   
+                    //destOrientW
+                    res.destOrientW=stoi(temp);        
+                    break;
                 default:
                     break;
                     //cout <<s<<'\n';

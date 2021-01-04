@@ -10,7 +10,7 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseCl
 
 class Robot_Class {
 	public:	
-		std::string name;
+		std::string key;
 		ros::NodeHandle n;	
     mir_agm::WebComm job;			
 
@@ -21,7 +21,7 @@ class Robot_Class {
 void Robot_Class::agm_comm()
 {
 	ros::ServiceClient agmClient = n.serviceClient<mir_agm::WebComm>("/web_comm");
-    job.request.name = name;
+    job.request.key = key;
     agmClient.call(job);
 }
 
@@ -67,14 +67,14 @@ int main(int argc, char** argv){
 
   Robot_Class robot;
   if(argc > 1){
-    robot.name = argv[1];  
+    robot.key = argv[1];  
   } else {
-    robot.name = "Tesla";  
+    cout<<"No key defined for the robot interface"<<endl;  
   }
   
   cout<<argc<<endl;
   cout<<argv<<endl;
-  cout<<robot.name<<endl;
+  cout<<robot.key<<endl;
 
   //find next job
   robot.job.request.function = "START";
@@ -93,12 +93,12 @@ int main(int argc, char** argv){
     } else if (job=="NEXTJOB" && status == 1) {
       //we have a new job to be activated
       cout<<"Found next job and activating"<<endl;
-      sX=robot.job.response.sourceX;
-      sY=robot.job.response.sourceY;
-      sW=robot.job.response.sourceW;
-      dX=robot.job.response.destinationX;
-      dY=robot.job.response.destinationY;
-      dW=robot.job.response.destinationW;
+      sX=robot.job.response.sourcePosX;
+      sY=robot.job.response.sourcePosY;
+      sW=robot.job.response.sourceOrientW;
+      dX=robot.job.response.destPosX;
+      dY=robot.job.response.destPosY;
+      dW=robot.job.response.destOrientW;
       robot.job.request.function = "ACTIVATEJOB";
       robot.job.request.location = "";
       robot.agm_comm();

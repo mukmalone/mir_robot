@@ -35,6 +35,6 @@
   
   <node name="web_comm_server_node" pkg="mir_agm" type="web_comm_server_node" />
 
-  <node name="agm_worker_node" pkg="mir_agm" type="agm_worker_node" args="Liam"/>
+  <node name="agm_worker_node" pkg="mir_agm" type="agm_worker_node" args="5fea60e6a02a4761c56569cf"/>
 
 </launch>
