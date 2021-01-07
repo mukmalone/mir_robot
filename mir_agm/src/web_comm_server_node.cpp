@@ -42,8 +42,9 @@ bool get_next_order(mir_agm::WebComm::Request &req,
     curl = curl_easy_init();
     
     if(curl) {            
-        string url = "http://192.168.2.238:3001"; //home
+        //string url = "http://192.168.2.238:3001"; //home
         //string url = "http://10.100.3.167:3001"; //office
+        string url ="http://adaptive-goal-management.herokuapp.com"; //production
         string f = req.function;
         if(f=="NEXTJOB"){
             url += "/workerGetNextJob";
@@ -73,6 +74,33 @@ bool get_next_order(mir_agm::WebComm::Request &req,
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '}'), readBuffer.end());
         readBuffer.erase(remove(readBuffer.begin(), readBuffer.end(), '"'), readBuffer.end());        
         cout<<readBuffer<<endl;
+
+        //format the tool and programm arrays so they don't contain ','
+        int comma;
+        int toolStart = readBuffer.find("[");
+        int toolEnd = readBuffer.find("]");
+        bool done=false;
+        //Tools
+        while(done==false){
+        comma = readBuffer.find(",",toolStart);
+        if(comma<toolEnd){
+        readBuffer.replace(comma,1,";");
+        } else {
+            done=true;
+            }
+        }
+        //Program
+        int programStart = readBuffer.find("[", toolStart+1);
+        int programEnd = readBuffer.find("]", toolEnd+1);
+        done=false;
+        while(done==false){
+        comma = readBuffer.find(",",programStart);
+        if(comma<programEnd){
+        readBuffer.replace(comma,1,";");
+        } else {
+            done=true;
+            }
+        }
 
         //break string into a vector
         vector<string> out;

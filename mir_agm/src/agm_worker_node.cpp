@@ -15,7 +15,7 @@ class Robot_Class {
     mir_agm::WebComm job;			
 
 		void agm_comm();
-    void move(int x, int y, int w);
+    void move(int posX, int posY, int posZ, int orientX, int orientY, int orientZ, int orientW);
 };
 
 void Robot_Class::agm_comm()
@@ -25,7 +25,7 @@ void Robot_Class::agm_comm()
     agmClient.call(job);
 }
 
-void Robot_Class::move(int x, int y, int w)
+void Robot_Class::move(int posX, int posY, int posZ, int orientX, int orientY, int orientZ, int orientW)
 {
   //tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
@@ -37,13 +37,18 @@ void Robot_Class::move(int x, int y, int w)
 
   move_base_msgs::MoveBaseGoal goal;
 
-  //we'll send a goal to the robot to move 1 meter forward
+  //we'll send a goal to the robot which is the next job received
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-  goal.target_pose.pose.position.x = x;
-  goal.target_pose.pose.position.y = y;
-  goal.target_pose.pose.orientation.w = 1.0;
+  goal.target_pose.pose.position.x = posX;
+  goal.target_pose.pose.position.y = posY;
+  goal.target_pose.pose.position.z = posZ;
+  
+  goal.target_pose.pose.orientation.x = orientX;
+  goal.target_pose.pose.orientation.y = orientY;
+  goal.target_pose.pose.orientation.z = orientZ;
+  goal.target_pose.pose.orientation.w = orientW;
 
   ROS_INFO("Sending goal");
   ac.sendGoal(goal);
@@ -78,7 +83,12 @@ int main(int argc, char** argv){
 
   //find next job
   robot.job.request.function = "START";
-  int sX, sY, sW, dX, dY, dW;
+  //source coordinates
+  int sPosX, sPosY, sPosZ, sOrientX, sOrientY, sOrientZ, sOrientW;
+  int dPosX, dPosY, dPosZ, dOrientX, dOrientY, dOrientZ, dOrientW;
+
+  //destination coordinates
+
   while (ros::ok()) { 
 
     string job = robot.job.request.function;
@@ -93,12 +103,23 @@ int main(int argc, char** argv){
     } else if (job=="NEXTJOB" && status == 1) {
       //we have a new job to be activated
       cout<<"Found next job and activating"<<endl;
-      sX=robot.job.response.sourcePosX;
-      sY=robot.job.response.sourcePosY;
-      sW=robot.job.response.sourceOrientW;
-      dX=robot.job.response.destPosX;
-      dY=robot.job.response.destPosY;
-      dW=robot.job.response.destOrientW;
+      //source
+      sPosX=robot.job.response.sourcePosX;
+      sPosY=robot.job.response.sourcePosY;
+      sPosZ=robot.job.response.sourcePosZ;
+      sOrientX=robot.job.response.sourceOrientX;
+      sOrientY=robot.job.response.sourceOrientY;
+      sOrientZ=robot.job.response.sourceOrientZ;
+      sOrientW=robot.job.response.sourceOrientW;
+      //destination
+      dPosX=robot.job.response.destPosX;
+      dPosY=robot.job.response.destPosY;
+      dPosZ=robot.job.response.destPosZ;
+      dOrientX=robot.job.response.destOrientX;
+      dOrientY=robot.job.response.destOrientY;
+      dOrientZ=robot.job.response.destOrientZ;
+      dOrientW=robot.job.response.destOrientW;
+
       robot.job.request.function = "ACTIVATEJOB";
       robot.job.request.location = "";
       robot.agm_comm();
@@ -107,8 +128,8 @@ int main(int argc, char** argv){
       cout<<"Moving to source"<<endl;
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "source";
-      cout<<sX<<","<<sY<<","<<sW<<endl;
-      robot.move(sX, sY, sW);
+      cout<<sPosX<<" "<<sPosY<<" "<<sPosZ<<" "<<sOrientX<<" "<<sOrientY<<" "<<sOrientZ<<" "<<sOrientW<<endl;
+      robot.move(sPosX, sPosY, sPosZ, sOrientX, sOrientY, sOrientZ, sOrientW);
       robot.agm_comm();
     } else if (job=="MOVEWORKER" && status == 1){
       //either TAKEPART or LOADPART depending on location
@@ -126,8 +147,8 @@ int main(int argc, char** argv){
       cout<<"Moving to destination"<<endl;
       robot.job.request.function = "MOVEWORKER";
       robot.job.request.location = "destination";
-      cout<<dX<<","<<dY<<","<<dW<<endl;
-      robot.move(dX,dY, dW);
+      cout<<dPosX<<" "<<dPosY<<" "<<dPosZ<<" "<<dOrientX<<" "<<dOrientY<<" "<<dOrientZ<<" "<<dOrientW<<endl;
+      robot.move(dPosX, dPosY, dPosZ, dOrientX, dOrientY, dOrientZ, dOrientW);
       robot.agm_comm();
     } else if (job=="LOADPART" && status == 1) {
       //archive job
