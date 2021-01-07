@@ -117,4 +117,5 @@ curl:  http://192.168.2.238:3001/workerLoadWorkstation?name=your-robot-name-goes
 ### /workerArchiveJob ###
 - 15001: There is a problem with communication check message formatting, normally a worker id problem
 - 15002: Error with logic of archiving job
-- 15003: The worker still has a job and needs to complete before archiving
+- 15003: The worker needs a job to be activated and complete before archiving
+- 15004: The worker still has a job and needs to complete before archiving
